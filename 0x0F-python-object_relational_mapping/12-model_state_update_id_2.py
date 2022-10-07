@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-'''Adds a State object to a database.
+'''Updates a State object in a database.
 '''
 import sys
 from sqlalchemy import create_engine
@@ -19,14 +19,8 @@ if __name__ == '__main__':
         engine = create_engine(DATABASE_URL)
         Base.metadata.create_all(engine)
         session = sessionmaker(bind=engine)()
-        new_state = State(name='Louisiana')
-        session.add(new_state)
-        try:
-            session.flush()
-            session.refresh(new_state)
-            if new_state.id is not None:
-                print('{}'.format(new_state.id))
-        except Exception:
-            session.rollback()
-        finally:
-            session.commit()
+        session.query(State).filter(State.id == 2).update(
+            {State.name: 'New Mexico'},
+            synchronize_session=False
+        )
+        session.commit()
