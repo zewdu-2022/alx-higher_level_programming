@@ -1,16 +1,20 @@
 #!/usr/bin/python3
-'''A module containing the City model.
+'''A module containing the State model.
 '''
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-from relationship_state import Base
+
+Base = declarative_base()
+'''Represents the base class for all tables.
+'''
 
 
-class City(Base):
-    '''Represents a row in a cities table.
+class State(Base):
+    '''Represents a row in a states table.
     '''
-    __tablename__ = "cities"
+    __tablename__ = "states"
     id = Column(
         Integer,
         autoincrement=True,
@@ -22,8 +26,8 @@ class City(Base):
         String(length=128),
         nullable=False
     )
-    state_id = Column(
-        Integer,
-        ForeignKey('states.id'),
-        nullable=False
+    cities = relationship(
+        "City",
+        cascade="all, delete, delete-orphan",
+        backref="state"
     )
